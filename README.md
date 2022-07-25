@@ -6,7 +6,6 @@
 
 Функционал позволяет создавать, обновлять, удалять задания
 
-
-![](C:\dev\job4j_todo\images\1.PNG)
-![](C:\dev\job4j_todo\images\2.PNG)
-![](C:\dev\job4j_todo\images\3.PNG)
+![ScreenShot](images/1.PNG)
+![ScreenShot](images/2.PNG)
+![ScreenShot](images/3.PNG)
