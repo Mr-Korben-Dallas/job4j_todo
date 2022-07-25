@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+    <head th:replace="~{fragments/head :: head}"></head>
+    <body>
+        <div th:insert="~{fragments/navigation-menu :: navigation}"></div>
+        <div class="container">
+            <div class="card">
+                <div class="card-header">
+                    Подробное описание задания:
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">
+                        Имя: <span th:text="${item.name}" />
+                    </h5>
+
+                    <h6 class="card-subtitle mb-2 text-muted">
+                        Дата создания: <span th:text="${#temporals.format(item.created, 'dd-MM-yyyy HH:mm')}" />
+                    </h6>
+
+                    <p class="card-text">
+                        <span th:text="${item.description}" />
+                    </p>
+
+                    <div class="btn-group" role="group">
+                        <form th:action="@{|/complete/${item.id}|}" method="POST">
+                            <button type="submit" class="btn btn-outline-success mr-2">Выполнено</button>
+                        </form>
+
+                        <form th:action="@{|/edit/${item.id}|}" method="GET">
+                            <button type="submit" class="btn btn-outline-info mr-2">Отредактировать</button>
+                        </form>
+
+                        <form th:action="@{|/delete/${item.id}|}" method="POST">
+                            <button type="submit" class="btn btn-outline-danger">Удалить</button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
