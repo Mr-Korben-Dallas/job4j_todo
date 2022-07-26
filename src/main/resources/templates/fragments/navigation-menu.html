@@ -10,6 +10,14 @@
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div class="navbar-nav">
                         <a class="nav-item nav-link active" th:href="@{/index}">Главная <span class="sr-only">(current)</span></a>
+                        <a class="nav-item nav-link" th:if="${account.name == 'Guest'}" th:href="@{/login}">
+                            <span th:text="${account.name}"></span>
+                            <span> | Войти</span>
+                        </a>
+                        <a class="nav-item nav-link" th:if="${account.name != 'Guest'}" th:href="@{/logout}">
+                            <span th:text="${account.name}"></span>
+                            <span> | Выйти</span>
+                        </a>
                     </div>
                 </div>
             </nav>

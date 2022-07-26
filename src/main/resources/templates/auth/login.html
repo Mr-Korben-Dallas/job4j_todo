@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head th:replace="~{fragments/head :: head}"></head>
+<body>
+<div th:insert="~{fragments/navigation-menu :: navigation}"></div>
+<div class="container pt-3">
+    <div class="row">
+        <div class="card" style="width: 100%">
+            <div class="card-header">
+                Авторизация
+            </div>
+            <div class="card-body">
+                <div th:if="${fail}" class="alert alert-danger" role="alert">
+                    Логин или пароль введены не верно!
+                </div>
+                <form th:action="@{/login}" method="POST">
+                    <div class="form-group">
+                        <label>Логин</label>
+                        <input type="text" class="form-control" name="login">
+                    </div>
+                    <div class="form-group">
+                        <label>Пароль</label>
+                        <input type="text" class="form-control" name="password">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Войти</button>
+                </form>
+
+                <form th:action="@{/signup}" method="GET">
+                    <button type="submit" class="btn btn-outline-success">Зарегистрироваться</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+</html>

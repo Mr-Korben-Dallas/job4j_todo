@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="~{fragments/head :: head}"></head>
+<body>
+<div th:insert="~{fragments/navigation-menu :: navigation}"></div>
+<div class="container">
+    <div class="row pt-3">
+        <div class="card" style="width: 100%">
+            <div class="card-header">
+                Регистрация:
+            </div>
+            <div class="card-body">
+                <form th:action="@{/signup}" method="POST">
+                    <input type="hidden" name="id" value="0"/>
+                    <div class="form-group">
+                        <label for="name">Имя</label>
+                        <input type="text" class="form-control" name="name" id="name">
+                        <br>
+                        <label for="login">Логин</label>
+                        <input type="text" class="form-control" name="login" id="login">
+                        <br>
+                        <label for="password">Пароль</label>
+                        <input type="password" class="form-control" name="password" id="password">
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Зарегистрироваться</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
