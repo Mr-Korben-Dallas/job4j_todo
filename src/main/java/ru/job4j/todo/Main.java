@@ -21,40 +21,6 @@ public class Main {
         SpringApplication.run(Main.class, args);
     }
 
-    private Properties loadDbProperties() {
-        Properties cfg = new Properties();
-        try (BufferedReader io = new BufferedReader(
-                new InputStreamReader(
-                        Main.class.getClassLoader()
-                                .getResourceAsStream("db.properties")
-                )
-        )) {
-            cfg.load(io);
-        } catch (Exception e) {
-            log.error("Error when loadDbProperties()", e, new IllegalStateException(e));
-        }
-        try {
-            Class.forName(cfg.getProperty("jdbc.driver"));
-        } catch (Exception e) {
-            log.error("Error when getProperty in loadDbProperties()", e, new IllegalStateException(e));
-        }
-        return cfg;
-    }
-
-    @Bean
-    public BasicDataSource loadPool() {
-        Properties cfg = loadDbProperties();
-        BasicDataSource pool = new BasicDataSource();
-        pool.setDriverClassName(cfg.getProperty("jdbc.driver"));
-        pool.setUrl(cfg.getProperty("jdbc.url"));
-        pool.setUsername(cfg.getProperty("jdbc.username"));
-        pool.setPassword(cfg.getProperty("jdbc.password"));
-        pool.setMinIdle(5);
-        pool.setMaxIdle(10);
-        pool.setMaxOpenPreparedStatements(100);
-        return pool;
-    }
-
     @Bean(destroyMethod = "close")
     public SessionFactory sf() {
         final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
