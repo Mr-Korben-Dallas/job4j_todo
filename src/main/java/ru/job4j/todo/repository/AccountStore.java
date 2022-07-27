@@ -11,16 +11,16 @@ import java.util.Optional;
 
 @ThreadSafe
 @Repository
-public class AccountStore {
-    private final TransactionWrapper transactionWrapper;
+public class AccountStore implements Store {
+    private final SessionFactory sf;
 
-    public AccountStore(TransactionWrapper transactionWrapper) {
-        this.transactionWrapper = transactionWrapper;
+    public AccountStore(SessionFactory sf) {
+        this.sf = sf;
     }
 
     public Optional<Account> save(Account account) {
         try {
-            transactionWrapper.tx(session -> session.save(account));
+            Store.super.tx(session -> session.save(account), sf);
         } catch (HibernateException e) {
             return Optional.empty();
         }
@@ -28,13 +28,14 @@ public class AccountStore {
     }
 
     public Optional<Account> findAccount(Account account) {
-        return transactionWrapper.tx(
+        return Store.super.tx(
                 session -> {
                     final Query<Account> query = session.createQuery("from Account where login = :login and password = :password", Account.class);
                     query.setParameter("login", account.getLogin());
                     query.setParameter("password", account.getPassword());
                     return query.uniqueResultOptional();
-                }
+                },
+                sf
         );
     }
 }
