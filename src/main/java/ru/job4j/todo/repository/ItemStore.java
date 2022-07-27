@@ -11,80 +11,69 @@ import java.util.List;
 
 @Repository
 public class ItemStore {
-    private final SessionFactory sf;
+    private final TransactionWrapper transactionWrapper;
 
-    public ItemStore(SessionFactory sf) {
-        this.sf = sf;
+    public ItemStore(TransactionWrapper transactionWrapper) {
+        this.transactionWrapper = transactionWrapper;
     }
 
     public Collection<Item> findAll() {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        List<Item> items = session.createQuery("from Item", Item.class).list();
-        session.getTransaction().commit();
-        session.close();
-        return items;
+        return transactionWrapper.tx(
+                session -> {
+                    final Query<Item> query = session.createQuery("from Item", Item.class);
+                    return query.list();
+                }
+        );
     }
 
     public Collection<Item> findByIsDone(boolean isDone) {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        List<Item> items = session.createQuery("from Item where is_done = :is_done", Item.class)
-                .setParameter("is_done", isDone)
-                .list();
-        session.getTransaction().commit();
-        session.close();
-        return items;
+        return transactionWrapper.tx(
+                session -> {
+                    final Query<Item> query = session.createQuery("from Item where is_done = :is_done", Item.class);
+                    query.setParameter("is_done", isDone);
+                    return query.list();
+                }
+        );
     }
 
     public void add(Item item) {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        session.persist(item);
-        session.getTransaction().commit();
-        session.close();
+        transactionWrapper.tx(session -> session.save(item));
     }
 
     public Item findById(Long id) {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        Query<Item> query = session.createQuery("from Item where id = :id", Item.class);
-        query.setParameter("id", id);
-        Item item = query.uniqueResult();
-        session.getTransaction().commit();
-        session.close();
-        return item;
+        return transactionWrapper.tx(
+                session -> {
+                    final Query<Item> query = session.createQuery("from Item where id = :id", Item.class);
+                    query.setParameter("id", id);
+                    return query.uniqueResult();
+                }
+        );
     }
 
     public void complete(Long id) {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        session.createQuery("update Item set is_done = true where id = :id")
-                .setParameter("id", id)
-                .executeUpdate();
-        session.getTransaction().commit();
-        session.close();
+        transactionWrapper.tx(
+                session -> session.createQuery("update Item set is_done = true where id = :id")
+                        .setParameter("id", id)
+                        .executeUpdate()
+        );
+
     }
 
     public void update(Item item) {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        session.createQuery("update Item set name = :name, description = :description where id = :id")
-                .setParameter("name", item.getName())
-                .setParameter("description", item.getDescription())
-                .setParameter("id", item.getId())
-                .executeUpdate();
-        session.getTransaction().commit();
-        session.close();
+        transactionWrapper.tx(
+                session -> session.createQuery("update Item set name = :name, description = :description where id = :id")
+                        .setParameter("name", item.getName())
+                        .setParameter("description", item.getDescription())
+                        .setParameter("id", item.getId())
+                        .executeUpdate()
+        );
     }
 
     public void delete(Long id) {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        session.createQuery("delete from Item where id = :id")
-                .setParameter("id", id)
-                .executeUpdate();
-        session.getTransaction().commit();
-        session.close();
+        transactionWrapper.tx(
+                session -> session.createQuery("delete from Item where id = :id")
+                        .setParameter("id", id)
+                        .executeUpdate()
+        );
     }
 }
