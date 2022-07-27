@@ -17,8 +17,8 @@ public class AccountService {
         this.store = store;
     }
 
-    public void persist(Account account) {
-        store.persist(account);
+    public Optional<Account> save(Account account) {
+        return store.save(account);
     }
 
     public Optional<Account> findAccount(Account account) {

@@ -12,3 +12,5 @@ CREATE TABLE IF NOT EXISTS accounts (
    login TEXT NOT NULL,
    password TEXT NOT NULL
 );
+
+ALTER TABLE accounts ADD CONSTRAINT login_unique UNIQUE (login);

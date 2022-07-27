@@ -43,15 +43,19 @@ public class AccountController {
     }
 
     @GetMapping("/signup")
-    public String signupPage(Model model, HttpSession session) {
+    public String signupPage(Model model, @RequestParam(name = "fail", required = false) Boolean fail, HttpSession session) {
         Account account = service.accountFromSession(session);
         model.addAttribute("account", account);
+        model.addAttribute("fail", fail != null);
         return "auth/signup";
     }
 
     @PostMapping("/signup")
     public String signup(@ModelAttribute Account account, HttpServletRequest req) {
-        service.persist(account);
+        Optional<Account> createdAccount = service.save(account);
+        if (createdAccount.isEmpty()) {
+            return "redirect:/signup?fail=true";
+        }
         HttpSession session = req.getSession();
         session.setAttribute("account", account);
         return "redirect:/index";

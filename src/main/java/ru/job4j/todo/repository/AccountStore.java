@@ -1,6 +1,7 @@
 package ru.job4j.todo.repository;
 
 import net.snowflake.client.jdbc.internal.net.jcip.annotations.ThreadSafe;
+import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
@@ -17,8 +18,13 @@ public class AccountStore {
         this.transactionWrapper = transactionWrapper;
     }
 
-    public void persist(Account account) {
-        transactionWrapper.tx(session -> session.save(account));
+    public Optional<Account> save(Account account) {
+        try {
+            transactionWrapper.tx(session -> session.save(account));
+        } catch (HibernateException e) {
+            return Optional.empty();
+        }
+        return Optional.of(account);
     }
 
     public Optional<Account> findAccount(Account account) {
