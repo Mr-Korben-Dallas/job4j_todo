@@ -16,7 +16,7 @@ public class ItemStore implements Store {
     }
 
     public Collection<Item> findAll() {
-        return Store.super.tx(
+        return tx(
                 session -> {
                     final Query<Item> query = session.createQuery("from Item", Item.class);
                     return query.list();
@@ -26,7 +26,7 @@ public class ItemStore implements Store {
     }
 
     public Collection<Item> findByIsDone(boolean isDone) {
-        return Store.super.tx(
+        return tx(
                 session -> {
                     final Query<Item> query = session.createQuery("from Item where is_done = :is_done", Item.class);
                     query.setParameter("is_done", isDone);
@@ -37,11 +37,11 @@ public class ItemStore implements Store {
     }
 
     public void add(Item item) {
-        Store.super.tx(session -> session.save(item), sf);
+        tx(session -> session.save(item), sf);
     }
 
     public Item findById(Long id) {
-        return Store.super.tx(
+        return tx(
                 session -> {
                     final Query<Item> query = session.createQuery("from Item where id = :id", Item.class);
                     query.setParameter("id", id);
@@ -52,7 +52,7 @@ public class ItemStore implements Store {
     }
 
     public void complete(Long id) {
-        Store.super.tx(
+        tx(
                 session -> session.createQuery("update Item set is_done = true where id = :id")
                         .setParameter("id", id)
                         .executeUpdate(),
@@ -62,7 +62,7 @@ public class ItemStore implements Store {
     }
 
     public void update(Item item) {
-        Store.super.tx(
+        tx(
                 session -> session.createQuery("update Item set name = :name, description = :description where id = :id")
                         .setParameter("name", item.getName())
                         .setParameter("description", item.getDescription())
@@ -73,7 +73,7 @@ public class ItemStore implements Store {
     }
 
     public void delete(Long id) {
-        Store.super.tx(
+        tx(
                 session -> session.createQuery("delete from Item where id = :id")
                         .setParameter("id", id)
                         .executeUpdate(),

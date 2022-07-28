@@ -20,7 +20,7 @@ public class AccountStore implements Store {
 
     public Optional<Account> save(Account account) {
         try {
-            Store.super.tx(session -> session.save(account), sf);
+            tx(session -> session.save(account), sf);
         } catch (HibernateException e) {
             return Optional.empty();
         }
@@ -28,7 +28,7 @@ public class AccountStore implements Store {
     }
 
     public Optional<Account> findAccount(Account account) {
-        return Store.super.tx(
+        return tx(
                 session -> {
                     final Query<Account> query = session.createQuery("from Account where login = :login and password = :password", Account.class);
                     query.setParameter("login", account.getLogin());
