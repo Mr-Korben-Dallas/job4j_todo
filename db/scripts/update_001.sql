@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS items (
 CREATE TABLE IF NOT EXISTS accounts (
    id bigserial PRIMARY KEY,
    name TEXT NOT NULL,
-   login TEXT NOT NULL,
+   login varchar NOT NULL,
    password TEXT NOT NULL
 );
 
