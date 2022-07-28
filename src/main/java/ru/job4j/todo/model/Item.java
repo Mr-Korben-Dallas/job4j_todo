@@ -13,6 +13,9 @@ public class Item {
     private Long id;
     private String name;
     private String description;
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    private Account account;
     @Column(name = "is_done")
     private boolean isDone;
     private LocalDateTime created = LocalDateTime.now();
@@ -23,6 +26,14 @@ public class Item {
     public Item(String name, String description, boolean isDone, LocalDateTime created) {
         this.name = name;
         this.description = description;
+        this.isDone = isDone;
+        this.created = created;
+    }
+
+    public Item(String name, String description, Account account, boolean isDone, LocalDateTime created) {
+        this.name = name;
+        this.description = description;
+        this.account = account;
         this.isDone = isDone;
         this.created = created;
     }
@@ -65,6 +76,14 @@ public class Item {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     @Override

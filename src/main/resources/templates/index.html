@@ -16,6 +16,7 @@
                         <th scope="col">#</th>
                         <th scope="col">Имя</th>
                         <th scope="col">Статус</th>
+                        <th scope="col">Создано пользователем</th>
                         <th scope="col">Дата добавления</th>
                     </tr>
                     </thead>
@@ -29,6 +30,7 @@
                         </td>
                         <td th:if="${item.isDone()}">Выполнено</td>
                         <td th:if="${!item.isDone()}">Не выполнено</td>
+                        <td th:text="${item.account.login}" />
                         <td th:text="${#temporals.format(item.created, 'dd-MM-yyyy HH:mm')}" />
                     </tr>
                     </tbody>

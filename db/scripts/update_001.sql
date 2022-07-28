@@ -14,3 +14,5 @@ CREATE TABLE IF NOT EXISTS accounts (
 );
 
 ALTER TABLE accounts ADD CONSTRAINT login_unique UNIQUE (login);
+
+ALTER TABLE items ADD column account_id bigserial references accounts(id);

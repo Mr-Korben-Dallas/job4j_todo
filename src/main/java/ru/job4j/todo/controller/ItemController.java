@@ -48,7 +48,9 @@ public class ItemController {
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute Item item) {
+    public String create(@ModelAttribute Item item, HttpSession session) {
+        Account account = accountService.accountFromSession(session);
+        item.setAccount(account);
         service.add(item);
         return "redirect:/index";
     }
