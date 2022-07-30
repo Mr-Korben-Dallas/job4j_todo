@@ -18,6 +18,14 @@
                                 <label for="description">Описание</label>
                                 <input type="text" class="form-control" name="description" id="description">
                             </div>
+                            <br>
+                            <div class="form-group">
+                                <label for="categoryIds">Категории</label>
+                                <select class="form-control" id="categoryIds" name="categoryIds" multiple="multiple">
+                                    <option th:each="category : ${categories}" th:value="${category.id}"
+                                            th:text="${category.name}" th:selected="${category.id==1}"></option>
+                                </select>
+                            </div>
                             <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
                         </form>
                     </div>

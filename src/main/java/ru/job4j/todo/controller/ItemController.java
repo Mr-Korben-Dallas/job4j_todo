@@ -5,23 +5,28 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.Account;
+import ru.job4j.todo.model.Category;
 import ru.job4j.todo.model.Item;
 import ru.job4j.todo.service.AccountService;
+import ru.job4j.todo.service.CategoryService;
 import ru.job4j.todo.service.ItemService;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @ThreadSafe
 @Controller
 public class ItemController {
     private final ItemService service;
     private final AccountService accountService;
+    private final CategoryService categoryService;
 
-    public ItemController(ItemService service, AccountService accountService) {
+    public ItemController(ItemService service, AccountService accountService, CategoryService categoryService) {
         this.service = service;
         this.accountService = accountService;
+        this.categoryService = categoryService;
     }
 
     @RequestMapping(value = {"/index", "/index/done/{isDone}"})
@@ -44,13 +49,18 @@ public class ItemController {
         Account account = accountService.accountFromSession(session);
         model.addAttribute("account", account);
         model.addAttribute("item", new Item());
+        model.addAttribute("categories", categoryService.findAll());
         return "item/add";
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute Item item, HttpSession session) {
+    public String create(@ModelAttribute Item item, @RequestParam(name = "categoryIds") ArrayList<Long> categoryIds, HttpSession session) {
         Account account = accountService.accountFromSession(session);
         item.setAccount(account);
+        List<Category> categories = categoryService.fetchByIds(categoryIds);
+        if (!categories.isEmpty()) {
+            item.addCategories(categories);
+        }
         service.add(item);
         return "redirect:/index";
     }
